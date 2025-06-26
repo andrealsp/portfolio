@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: "${APPLICATION_NAME:postal-code-v1}"
+
+server:
+  servlet:
+    context-path: "/${APPLICATION_PREFIX:postalcode/v1}"
+  error.include-stacktrace: never
+
+webservice:
+  rest:
+    postalcode:
+      uri: "https://viacep.com.br/ws"
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: full
+
+log:
+  file:
+    path: "${LOG_PATH:/tmp/logs}"
+
+management:
+  endpoints:
+    web:
+      base-path: "/"
+      path-mapping:
+        health: "healthcheck"
+
+logging:
+  level:
+    br.com.portfolio.zipcode: INFO
+    org.springframework.web: INFO
+    feign: DEBUG
