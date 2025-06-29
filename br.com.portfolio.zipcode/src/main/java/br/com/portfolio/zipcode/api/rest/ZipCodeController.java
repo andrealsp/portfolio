@@ -1,7 +1,8 @@
 package br.com.portfolio.zipcode.api.rest;
 
 import br.com.portfolio.zipcode.core.application.service.ZipcodeService;
-import br.com.portfolio.zipcode.core.domain.model.StreetResponse;
+import br.com.portfolio.zipcode.core.domain.model.ZipcodeRequest;
+import br.com.portfolio.zipcode.core.domain.model.ZipcodeResponse;
 import br.com.portfolio.zipcode.shared.exception.ZipCodeException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -20,15 +21,10 @@ public class ZipCodeController implements ZipCodeAPI {
     }
 
     @Override
-    public ResponseEntity<StreetResponse> searchByZipCode(String zipcode) throws ZipCodeException {
-        log.info("Class: ZipCodeController - method: searchByZipCode - zipcode: {}", zipcode);
-        return ResponseEntity.ok().body(service.searchByZipCode(zipcode));
+    public ResponseEntity<List<ZipcodeResponse>> searchAddress(ZipcodeRequest request) throws ZipCodeException {
+        log.info("Class: ZipCodeController - method: searchByZipCode - zipcode: {}", request);
+        return ResponseEntity.ok().body(service.searchAddress(request));
     }
 
-    @Override
-    public ResponseEntity<List<StreetResponse>> searchByStreetName(String state, String city, String streetName) throws ZipCodeException {
-        log.info("Class: ZipCodeController - method: searchByStreetName - state: {} - city: {}, streetName: {}", state, city, streetName);
-        return ResponseEntity.ok().body(service.searchByStreetName(state, city, streetName));
-    }
 
 }

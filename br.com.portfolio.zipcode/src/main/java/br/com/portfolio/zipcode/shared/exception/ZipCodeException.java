@@ -16,11 +16,33 @@ public class ZipCodeException extends RuntimeException {
     private Timestamp timestamp;
     private String traceId;
 
-    public ZipCodeException(FeignException feignException) {
-        this.errorCode = feignException.status();
-        this.message = feignException.getMessage();
+    public ZipCodeException(RuntimeException exception) {
+        this.errorCode = determineErrorCode(exception);
+        this.message = exception.getMessage();
         this.timestamp = GetTimestamp.getTimestamp();
         this.traceId = setTraceId();
+    }
+
+    public ZipCodeException(String message, Integer errorCode) {
+        this.message = message;
+        this.errorCode = errorCode;
+        this.timestamp = GetTimestamp.getTimestamp();
+        this.traceId = setTraceId();
+    }
+
+    private Integer determineErrorCode(RuntimeException exception) {
+        if (exception instanceof FeignException feignException) {
+            return feignException.status();
+        } else if (exception instanceof IllegalArgumentException) {
+            return 400; // Bad Request
+        } else if (exception instanceof IllegalStateException) {
+            return 409; // Conflict
+        } else if (exception instanceof UnsupportedOperationException) {
+            return 501; // Not Implemented
+        } else if (exception instanceof SecurityException) {
+            return 403; // Forbidden
+        }
+        return 500; // Internal Server Error para outras RuntimeExceptions
     }
 
     private String setTraceId() {

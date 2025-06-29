@@ -1,6 +1,7 @@
 package br.com.portfolio.zipcode.infrastructure.rest.postalcode;
 
 import br.com.portfolio.zipcode.core.domain.model.StreetResponse;
+import br.com.portfolio.zipcode.core.domain.model.ZipcodeRequest;
 import br.com.portfolio.zipcode.infrastructure.rest.postalcode.client.PostalCodeFeignClient;
 import br.com.portfolio.zipcode.shared.exception.ZipCodeException;
 import feign.FeignException;
@@ -30,11 +31,11 @@ public class PostalCodeRest implements PostalCodePortOut {
     }
 
     @Override
-    public List<StreetResponse> searchByStreetName(String state, String city, String streetName) throws ZipCodeException {
+    public List<StreetResponse> searchByStreetName(ZipcodeRequest request) throws ZipCodeException {
         try {
-            return client.searchByStreetName(state, city, streetName);
+            return client.searchByStreetName(request.getState(), request.getCity(), request.getStreetName());
         } catch (FeignException ex) {
-            log.error("Error searching street: {} in city: {} - state: {}", streetName, city, state, ex);
+            log.error("Error searching street: {} in city: {} - state: {}", request.getState(), request.getCity(), request.getStreetName(), ex);
             throw new ZipCodeException(ex);
         }
     }
